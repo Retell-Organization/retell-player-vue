@@ -60,7 +60,7 @@ export default {
     buttonColorClick: { type: String, default: '#1a1a1a' },
     playerBackground: { type: String, default: 'transparent' },
     borderColor: { type: String, default: 'transparent' },
-    borderRadius: { type: Number, default: 0 },
+    borderRadius: { type: Number, default: 8 },
     fontColor: { type: String, default: '#444444' }
   },
   data () {
