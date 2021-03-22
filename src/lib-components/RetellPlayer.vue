@@ -201,6 +201,7 @@ body {
 .retell_player__control {
   cursor: pointer;
   padding-right: 10px;
+  display: flex;
 }
 
 .retell_player__control svg path,
