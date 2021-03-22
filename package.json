@@ -1,14 +1,11 @@
 {
-  "name": "retell-player-vue",
+  "name": "@retell-organization/retell-player-vue",
   "version": "0.0.1",
   "description": "Retell Audio Player",
   "author": {
     "name": "Bibik Dima",
     "email": "dima@retell.cc",
     "url": "https://retell.cc"
-  },
-  "publishConfig": {
-    "registry":"https://npm.pkg.github.com"
   },
   "main": "dist/retell-player-vue.ssr.js",
   "browser": "dist/retell-player-vue.esm.js",
