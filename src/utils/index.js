@@ -8,3 +8,17 @@ export function formatDuration (duration) {
 
   return mins.substr(-2) + ':' + secs.substr(-2)
 }
+
+export function getRetellLink (options) {
+  const url = new URL(options.url)
+  return `https://retell.cc?utm_source=widget&utm_medium=${
+        options.source
+    }&utm_campaign=${url.origin}`
+}
+
+export function getRelativeX (element, event, sizeShift = 0) {
+  const rect = element.getBoundingClientRect()
+  const x = event.clientX + sizeShift - rect.left
+
+  return (100 / element.offsetWidth) * x
+}

@@ -19,11 +19,17 @@
     </div>
     <div class="player__container">
       <div class="player__title">{{ article.title }}</div>
-      <div class="player__progress">
-        <div class="player__progress--bar">
+      <div
+        class="player__progress"
+        @mouseleave="hovered = 0"
+        @mousemove="onProgressBarHover"
+        @click.prevent="onProgressBarClick"
+      >
+        <div ref="track" class="player__progress--bar">
           <div class="player__progress--active" :style="{width: `${progress}%`}">
             <div class="player__progress--pointer" />
           </div>
+          <div class="player__progress--hovered" :style="{width: `${hovered}%`}" />
         </div>
       </div>
       <div class="player__info">
@@ -37,93 +43,112 @@
 </template>
 
 <script>
-  import GateApi from '@/api/gate'
-  import Api from '@/api/api'
-  import { makeid, formatDuration } from '@/utils'
+import GateApi from '@/api/gate'
+import Api from '@/api/api'
+import { makeid, formatDuration, getRetellLink, getRelativeX } from '@/utils'
 
-  export default {
-    name: 'RetellPlayer',
-    props: {
-      buttonColor: { type: String, default: '#000' }
-    },
-    data() {
-      return {
+export default {
+  name: 'RetellPlayer',
+  props: {
+    articleUrl: { type: String, required: false },
+    buttonColor: { type: String, default: '#333333' },
+    buttonColorHover: { type: String, default: '#4d4d4d' },
+    buttonColorClick: { type: String, default: '#1a1a1a' }
+  },
+  data () {
+    return {
+      url: null,
+      loading: true,
+      error: false,
+      isPlaying: false,
+      deviceType: null,
+      progress: 0,
+      currentTime: 0,
+      hovered: 60,
+      article: {
+        title: null,
+        audio: null,
+        duration: null,
         url: null,
-        loading: true,
-        error: false,
-        isPlaying: false,
-        deviceType: null,
-        progress: 0,
-        currentTime: 0,
-        article: {
-          title: null,
-          audio: null,
-          duration: null,
-          url: null,
-          vim: [],
-          id: null
-        }
+        vim: [],
+        id: null
       }
-    },
-    computed: {
-      cssProps() {
-        return {
-          '--button-color': this.buttonColor
-        }
-      },
-      retellLink() {
-        return "https://retell.cc"
-      }
-    },
-    created() {
-      this.url = window.location.href
-      this.url = "https://obi-wan.space/grammys-2021-beyonce-becomes-most-decorated-female-artist/"
-      //TODO: Detect deviceType
-      this.deviceType = 'desktop'
-
-      this.fetchArticle()
-    },
-    methods: {
-      fetchArticle () {
-        this.loading = true
-        const wstoken = makeid()
-
-        try {
-          return GateApi.check(this.url, this.deviceType)
-            .then(() => {
-              return Api.fetchAudio(this.url, wstoken)
-            })
-            .then((article) => {
-              this.article = article
-            })
-            .catch((e) => {
-              this.error = true
-            })
-        } finally {
-          this.loading = false
-        }
-      },
-      togglePlayer () {
-        this.isPlaying ? this.pause() : this.play()
-      },
-      play () {
-        this.$refs.player.play()
-        this.isPlaying = true
-      },
-      pause () {
-        this.$refs.player.pause()
-        this.isPlaying = false
-      },
-      timeupdateHandler (event) {
-        const progress = event.target.currentTime / event.target.duration * 100
-        this.currentTime = event.target.currentTime
-        this.progress = progress
-
-        if (event.target.currentTime === event.target.duration) { this.pause() }
-      },
-      formatDuration
     }
-  };
+  },
+  computed: {
+    cssProps () {
+      return {
+        '--button-color': this.buttonColor,
+        '--button-color-hover': this.buttonColorHover,
+        '--button-color-click': this.buttonColorClick
+      }
+    },
+    retellLink () {
+      return getRetellLink({
+        url: window.location.href,
+        source: this.deviceType
+      })
+    }
+  },
+  created () {
+    this.url = this.articleUrl ? this.articleUrl : window.location.href
+    // TODO: Detect deviceType
+    this.deviceType = 'desktop'
+
+    this.fetchArticle()
+  },
+  methods: {
+    fetchArticle () {
+      this.loading = true
+      const wstoken = makeid()
+
+      return GateApi.check(this.url, this.deviceType)
+        .then(() => {
+          return Api.fetchAudio(this.url, wstoken)
+        })
+        .then((article) => {
+          this.article = article
+          this.loading = false
+        })
+        .catch((e) => {
+          this.error = true
+          this.loading = false
+        })
+    },
+    togglePlayer () {
+      this.isPlaying ? this.pause() : this.play()
+    },
+    seek (progress) {
+      const second = (this.$refs.player.duration / 100) * progress
+      this.currentTime = second
+      this.progress = progress
+      this.$refs.player.currentTime = this.currentTime
+    },
+    play () {
+      this.$refs.player.play()
+      this.isPlaying = true
+    },
+    pause () {
+      this.$refs.player.pause()
+      this.isPlaying = false
+    },
+    timeupdateHandler (event) {
+      const progress = event.target.currentTime / event.target.duration * 100
+      this.currentTime = event.target.currentTime
+      this.progress = progress
+
+      if (event.target.currentTime === event.target.duration) { this.pause() }
+    },
+    onProgressBarHover (event) {
+      this.hovered = getRelativeX(this.$refs.track, event)
+    },
+    onProgressBarClick (event) {
+      const progress = getRelativeX(this.$refs.track, event)
+      this.seek(progress)
+    },
+    formatDuration
+  }
+}
 </script>
 
 <style>
@@ -153,6 +178,26 @@ body {
   stroke: var(--button-color);
 }
 
+.player__control:hover svg path,
+.player__control:hover svg g,
+.player__control:hover svg rect{
+  fill: var(--button-color-hover);
+}
+
+.player__control:hover svg circle {
+  stroke: var(--button-color-hover);
+}
+
+.player__control:active svg path,
+.player__control:active svg g,
+.player__control:active svg rect{
+  fill: var(--button-color-click);
+}
+
+.player__control:active svg circle {
+  stroke: var(--button-color-click);
+}
+
 .player__container {
   width: 100%;
 }
@@ -174,13 +219,15 @@ body {
 
 .player__progress {
   padding: 5px 0;
+  cursor: pointer;
 }
 
 .player__progress--bar {
   position: relative;
   width: 100%;
-  height: 2px;
+  height: 4px;
   background: #e5e5e5;
+  border-radius: 16px;
   cursor: pointer;
 }
 
@@ -189,22 +236,36 @@ body {
   top: 0;
   left: 0;
   bottom: 0;
-  height: 2px;
+  height: 4px;
   width: 0;
-  border-radius: 20px;
+  border-radius: 16px;
   background: #333;
+}
+
+.player__progress--hovered {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  width: 0;
+  border-radius: 16px;
+  background: #ffffff;
+  opacity: 0.2;
 }
 
 .player__progress--pointer {
   position: absolute;
-  top: 0;
+  top: 50%;
   right: 0;
-  transform: translate(50%, -3px);
+  transform: translate(50%, -50%);
   width: 8px;
   height: 8px;
   background: #000;
-  border-radius: 50%;
+  border-radius: 50%!important;
   cursor: pointer;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 25%);
+  z-index: 1;
 }
 
 .player__time {
