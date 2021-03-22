@@ -61,7 +61,12 @@ export default {
     playerBackground: { type: String, default: 'transparent' },
     borderColor: { type: String, default: 'transparent' },
     borderRadius: { type: Number, default: 8 },
-    fontColor: { type: String, default: '#444444' }
+    fontColor: { type: String, default: '#444444' },
+    pointerColor: { type: String, default: '#000000' },
+    pointerColorHover: { type: String, default: '#000000' },
+    pointerColorClick: { type: String, default: '#000000' },
+    progressBarColor: { type: String, default: '#e5e5e5' },
+    progressBarColorActive: { type: String, default: '#333333' }
   },
   data () {
     return {
@@ -93,7 +98,12 @@ export default {
         '--player-background': this.playerBackground,
         '--border-color': this.borderColor,
         '--border-radius': this.borderRadius,
-        '--font-color': this.fontColor
+        '--font-color': this.fontColor,
+        '--pointer-color': this.pointerColor,
+        '--pointer-color-hover': this.pointerColorHover,
+        '--pointer-color-click': this.pointerColorClick,
+        '--progress-bar-color': this.progressBarColor,
+        '--progress-bar-color-active': this.progressBarColorActive
       }
     },
     retellLink () {
@@ -263,7 +273,7 @@ body {
   position: relative;
   width: 100%;
   height: 4px;
-  background: #e5e5e5;
+  background: var(--progress-bar-color);
   border-radius: 16px;
   cursor: pointer;
 }
@@ -276,7 +286,7 @@ body {
   height: 4px;
   width: 0;
   border-radius: 16px;
-  background: #333;
+  background: var(--progress-bar-color-active);
 }
 
 .retell_player__progress--hovered {
@@ -298,11 +308,19 @@ body {
   transform: translate(-50%, -50%);
   width: 8px;
   height: 8px;
-  background: #000;
+  background: var(--pointer-color);
   border-radius: 50%!important;
   cursor: pointer;
   box-shadow: 0 4px 10px rgb(0 0 0 / 25%);
   z-index: 1;
+}
+
+.retell_player__progress--pointer:hover {
+  background: var(--pointer-color-hover);
+}
+
+.retell_player__progress--pointer:active {
+  background: var(--pointer-color-click);
 }
 
 .retell_player__time {
