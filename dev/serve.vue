@@ -10,6 +10,8 @@ export default Vue.extend({
 
 <template>
   <div id="app" style="width: 400px; margin: 0 auto;">
-    <retell-player article-url="https://obi-wan.space/grammys-2021-beyonce-becomes-most-decorated-female-artist/" />
+    <retell-player
+      article-url="https://www.sports.ru/football/1095248415-karpin-o-vozmozhnom-vozvrashhenii-v-spartak-sejchas-v-rostove-chuvstvu.html"
+    />
   </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
-  <div v-if="!loading && !error" :style="cssProps" class="player">
+  <div v-if="!loading && !error" :style="cssProps" class="retell_player">
     <audio ref="player" :src="article.audio" @timeupdate="timeupdateHandler"/>
-    <div class="player__control" @click="togglePlayer()">
+    <div class="retell_player__control" @click="togglePlayer()">
       <slot v-if="!isPlaying" name="pauseIcon">
         <svg width="30" height="30" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="30" cy="30" r="29" stroke-width="2" />
@@ -17,24 +17,24 @@
         </svg>
       </slot>
     </div>
-    <div class="player__container">
-      <div class="player__title">{{ article.title }}</div>
+    <div class="retell_player__container">
+      <div class="retell_player__title">{{ article.title }}</div>
       <div
-        class="player__progress"
+        class="retell_player__progress"
         @mouseleave="hovered = 0"
         @mousemove="onProgressBarHover"
         @click.prevent="onProgressBarClick"
       >
-        <div ref="track" class="player__progress--bar">
-          <div class="player__progress--active" :style="{width: `${progress}%`}">
-            <div class="player__progress--pointer" />
+        <div ref="track" class="retell_player__progress--bar">
+          <div class="retell_player__progress--active" :style="{width: `${progress}%`}">
+            <div class="retell_player__progress--pointer" />
           </div>
-          <div class="player__progress--hovered" :style="{width: `${hovered}%`}" />
+          <div class="retell_player__progress--hovered" :style="{width: `${hovered}%`}" />
         </div>
       </div>
-      <div class="player__info">
-        <div class="player__time">{{ formatDuration(currentTime) }}</div>
-        <a :href="retellLink" target="_blank" class="player__powered">
+      <div class="retell_player__info">
+        <div class="retell_player__time">{{ formatDuration(currentTime) }}</div>
+        <a :href="retellLink" target="_blank" class="retell_player__powered">
           Powered by Retell
         </a>
       </div>
@@ -53,7 +53,11 @@ export default {
     articleUrl: { type: String, required: false },
     buttonColor: { type: String, default: '#333333' },
     buttonColorHover: { type: String, default: '#4d4d4d' },
-    buttonColorClick: { type: String, default: '#1a1a1a' }
+    buttonColorClick: { type: String, default: '#1a1a1a' },
+    playerBackground: { type: String, default: 'transparent' },
+    borderColor: { type: String, default: 'transparent' },
+    borderRadius: { type: Number, default: 0 },
+    fontColor: { type: String, default: '#444444' }
   },
   data () {
     return {
@@ -80,7 +84,11 @@ export default {
       return {
         '--button-color': this.buttonColor,
         '--button-color-hover': this.buttonColorHover,
-        '--button-color-click': this.buttonColorClick
+        '--button-color-click': this.buttonColorClick,
+        '--player-background': this.playerBackground,
+        '--border-color': this.borderColor,
+        '--border-radius': this.borderRadius,
+        '--font-color': this.fontColor
       }
     },
     retellLink () {
@@ -156,73 +164,76 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-.player {
+.retell_player {
   display: flex;
   align-items: center;
   justify-content: left;
-  padding: 20px 0;
+  padding: 8px 12px;
+  background-color: var(--player-background);
+  border: 1px solid var(--border-color);
+  border-radius: calc(var(--border-radius) * 1px);
 }
 
-.player__control {
+.retell_player__control {
   cursor: pointer;
   padding-right: 10px;
 }
 
-.player__control svg path,
-.player__control svg g,
-.player__control svg rect{
+.retell_player__control svg path,
+.retell_player__control svg g,
+.retell_player__control svg rect{
   fill: var(--button-color);
 }
 
-.player__control svg circle {
+.retell_player__control svg circle {
   stroke: var(--button-color);
 }
 
-.player__control:hover svg path,
-.player__control:hover svg g,
-.player__control:hover svg rect{
+.retell_player__control:hover svg path,
+.retell_player__control:hover svg g,
+.retell_player__control:hover svg rect{
   fill: var(--button-color-hover);
 }
 
-.player__control:hover svg circle {
+.pretell_layer__control:hover svg circle {
   stroke: var(--button-color-hover);
 }
 
-.player__control:active svg path,
-.player__control:active svg g,
-.player__control:active svg rect{
+.retell_player__control:active svg path,
+.retell_player__control:active svg g,
+.retell_player__control:active svg rect{
   fill: var(--button-color-click);
 }
 
-.player__control:active svg circle {
+.retell_player__control:active svg circle {
   stroke: var(--button-color-click);
 }
 
-.player__container {
-  width: 100%;
+.retell_player__container {
+  width: calc(100% - 40px);
 }
 
-.player__title {
+.retell_player__title {
   max-width: 60%;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 11px;
-  color: #444444;
+  color: var(--font-color);;
   white-space: nowrap;
 }
 
-.player__info {
+.retell_player__info {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.player__progress {
+.retell_player__progress {
   padding: 5px 0;
   cursor: pointer;
 }
 
-.player__progress--bar {
+.retell_player__progress--bar {
   position: relative;
   width: 100%;
   height: 4px;
@@ -231,7 +242,7 @@ body {
   cursor: pointer;
 }
 
-.player__progress--active {
+.retell_player__progress--active {
   position: absolute;
   top: 0;
   left: 0;
@@ -242,7 +253,7 @@ body {
   background: #333;
 }
 
-.player__progress--hovered {
+.retell_player__progress--hovered {
   position: absolute;
   top: 0;
   left: 0;
@@ -254,7 +265,7 @@ body {
   opacity: 0.2;
 }
 
-.player__progress--pointer {
+.retell_player__progress--pointer {
   position: absolute;
   top: 50%;
   right: 0;
@@ -268,12 +279,12 @@ body {
   z-index: 1;
 }
 
-.player__time {
+.retell_player__time {
   font-size: 11px;
   color: #444;
 }
 
-.player__powered {
+.retell_player__powered {
   font-size: 10px;
   opacity: 0;
   color: #c4c4c4;
@@ -284,11 +295,11 @@ body {
   white-space: nowrap;
 }
 
-.player__powered:hover {
+.retell_player__powered:hover {
   color: #ababab;
 }
 
-.player:hover .player__powered {
+.retell_player:hover .retell_player__powered {
   opacity: 1;
 }
 </style>
