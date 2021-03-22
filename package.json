@@ -1,7 +1,12 @@
 {
   "name": "retell-player-vue",
   "version": "1.0.0",
-  "description": "",
+  "description": "Retell Audio Player",
+  "author": {
+    "name": "Bibik Dima",
+    "email": "dima@retell.cc",
+    "url": "https://retell.cc"
+  },
   "main": "dist/retell-player-vue.ssr.js",
   "browser": "dist/retell-player-vue.esm.js",
   "module": "dist/retell-player-vue.esm.js",
