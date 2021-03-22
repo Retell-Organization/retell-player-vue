@@ -26,11 +26,15 @@
         @click.prevent="onProgressBarClick"
       >
         <div ref="track" class="retell_player__progress--bar">
-          <div class="retell_player__progress--active" :style="{width: `${progress}%`}">
-            <div class="retell_player__progress--pointer" />
-          </div>
+          <div class="retell_player__progress--active" :style="{width: `${dragPosition ? dragPosition : progress}%`}" />
           <div class="retell_player__progress--hovered" :style="{width: `${hovered}%`}" />
         </div>
+        <div
+          ref="pointer"
+          class="retell_player__progress--pointer"
+          @mousedown="onPointerDrag"
+          :style="{left: `${dragPosition ? dragPosition : progress}%`}"
+        />
       </div>
       <div class="retell_player__info">
         <div class="retell_player__time">{{ formatDuration(currentTime) }}</div>
@@ -68,7 +72,8 @@ export default {
       deviceType: null,
       progress: 0,
       currentTime: 0,
-      hovered: 60,
+      hovered: 0,
+      dragPosition: 0,
       article: {
         title: null,
         audio: null,
@@ -154,6 +159,25 @@ export default {
       const progress = getRelativeX(this.$refs.track, event)
       this.seek(progress)
     },
+    onPointerDrag () {
+      document.addEventListener('mousemove', this.onMouseMove)
+      document.addEventListener('mouseup', this.onMouseUp)
+    },
+    onMouseMove (event) {
+      let moveRelX = getRelativeX(this.$refs.track, event)
+      if (moveRelX < 0) {
+        moveRelX = 0
+      }
+      if (moveRelX > 100) {
+        moveRelX = 100
+      }
+      this.dragPosition = moveRelX
+    },
+    onMouseUp () {
+      document.removeEventListener('mouseup', this.onMouseUp)
+      document.removeEventListener('mousemove', this.onMouseMove)
+      this.dragPosition = null
+    },
     formatDuration
   }
 }
@@ -229,6 +253,7 @@ body {
 }
 
 .retell_player__progress {
+  position: relative;
   padding: 5px 0;
   cursor: pointer;
 }
@@ -269,7 +294,7 @@ body {
   position: absolute;
   top: 50%;
   right: 0;
-  transform: translate(50%, -50%);
+  transform: translate(-50%, -50%);
   width: 8px;
   height: 8px;
   background: #000;
