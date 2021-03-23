@@ -4,13 +4,13 @@ Vue component of Audio Player for [Retell](https://retell.cc)
 
 ## Installation
 ```bash
-npm install @retell/retell-player-vue
+npm install @retell/retell-vue-player
 ```
 
 Install the plugin into Vue:
 ```javascript
 import Vue from 'vue'
-import RetellPlayer from '@retell/retell-player-vue'
+import RetellPlayer from '@retell/retell-vue-player'
 
 Vue.use(RetellPlayer)
 ```
