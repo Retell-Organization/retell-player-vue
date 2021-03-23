@@ -10,7 +10,7 @@ npm install @retell-organization/retell-player-vue
 Install the plugin into Vue:
 ```javascript
 import Vue from 'vue'
-import RetellPlayer from '@retell-organization/retell-player-vue'
+import RetellPlayer from '@retell/retell-player-vue'
 
 Vue.use(RetellPlayer)
 ```
