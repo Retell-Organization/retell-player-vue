@@ -1,6 +1,14 @@
 <template>
   <div v-if="!loading && !error" :style="cssProps" class="retell_player">
-    <audio ref="player" :src="article.audio" @timeupdate="timeupdateHandler"/>
+    <audio
+      ref="player"
+      :src="article.audio"
+      preload="none"
+      @loadedmetadata="onLoadedMetaDataHandler"
+      @timeupdate="onTimeupdateHandler"
+      @ended="onEndedHandler"
+
+    />
     <div class="retell_player__control" @click="togglePlayer()">
       <slot v-if="!isPlaying" name="pauseIcon">
         <svg width="30" height="30" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,7 +57,8 @@
 <script>
 import GateApi from '@/api/gate'
 import Api from '@/api/api'
-import { makeid, formatDuration, getRetellLink, getRelativeX } from '@/utils'
+import { makeid, formatDuration, getRetellLink, getRelativeX, getSource} from '@/utils'
+import Logger from '@/services/logger'
 
 export default {
   name: 'RetellPlayer',
@@ -79,6 +88,7 @@ export default {
       currentTime: 0,
       hovered: 0,
       dragPosition: 0,
+      firstHit: true,
       article: {
         title: null,
         audio: null,
@@ -115,8 +125,7 @@ export default {
   },
   created () {
     this.url = this.articleUrl ? this.articleUrl : window.location.href
-    // TODO: Detect deviceType
-    this.deviceType = 'desktop'
+    this.deviceType = getSource()
 
     this.fetchArticle()
   },
@@ -148,6 +157,10 @@ export default {
       this.$refs.player.currentTime = this.currentTime
     },
     play () {
+      if (this.firstHit) {
+        this.firstHit = false
+      }
+
       this.$refs.player.play()
       this.isPlaying = true
     },
@@ -155,12 +168,16 @@ export default {
       this.$refs.player.pause()
       this.isPlaying = false
     },
-    timeupdateHandler (event) {
+    onLoadedMetaDataHandler (event) {
+      this.firstHit = true
+    },
+    onTimeupdateHandler (event) {
       const progress = event.target.currentTime / event.target.duration * 100
       this.currentTime = event.target.currentTime
       this.progress = progress
-
-      if (event.target.currentTime === event.target.duration) { this.pause() }
+    },
+    onEndedHandler (event) {
+      this.pause()
     },
     onProgressBarHover (event) {
       this.hovered = getRelativeX(this.$refs.track, event)
