@@ -57,7 +57,7 @@
 <script>
 import GateApi from '@/api/gate'
 import Api from '@/api/api'
-import { makeid, formatDuration, getRetellLink, getRelativeX, getSource} from '@/utils'
+import { makeid, formatDuration, getRetellLink, getRelativeX, getSource } from '@/utils'
 import Logger from '@/services/logger'
 
 export default {
@@ -79,6 +79,8 @@ export default {
   },
   data () {
     return {
+      playerTicks: 0,
+      logger: null,
       url: null,
       loading: true,
       error: false,
@@ -88,7 +90,7 @@ export default {
       currentTime: 0,
       hovered: 0,
       dragPosition: 0,
-      firstHit: true,
+      loadedMetaData: false,
       article: {
         title: null,
         audio: null,
@@ -157,10 +159,6 @@ export default {
       this.$refs.player.currentTime = this.currentTime
     },
     play () {
-      if (this.firstHit) {
-        this.firstHit = false
-      }
-
       this.$refs.player.play()
       this.isPlaying = true
     },
@@ -169,24 +167,34 @@ export default {
       this.isPlaying = false
     },
     onLoadedMetaDataHandler (event) {
-      this.firstHit = true
+      this.playerTicks = 0
+      this.loadedMetaData = true
+      this.logger = new Logger(this.article, this.deviceType, this.$refs.player.duration)
     },
     onTimeupdateHandler (event) {
       const progress = event.target.currentTime / event.target.duration * 100
       this.currentTime = event.target.currentTime
       this.progress = progress
+
+      this.playerTicks++
+      if (this.playerTicks % 12 === 0) {
+        this.logger.log(this.currentTime)
+      }
     },
     onEndedHandler (event) {
       this.pause()
+      this.logger.log(this.$refs.player.duration)
     },
     onProgressBarHover (event) {
       this.hovered = getRelativeX(this.$refs.track, event)
     },
     onProgressBarClick (event) {
+      if (!this.loadedMetaData) return
       const progress = getRelativeX(this.$refs.track, event)
       this.seek(progress)
     },
     onPointerDrag () {
+      if (!this.loadedMetaData) return
       document.addEventListener('mousemove', this.onMouseMove)
       document.addEventListener('mouseup', this.onMouseUp)
     },
