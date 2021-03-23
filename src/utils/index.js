@@ -1,3 +1,10 @@
+const WEBVIEW_TRIGGERS = [
+  'WebView',
+  '(iPhone|iPod|iPad)(?!.*Safari)',
+  'Android.*(wv|.0.0.0)',
+  'Linux; U; Android'
+]
+
 export function makeid () {
   return Math.random().toString(3).substring(2, 36) + Math.random().toString(3).substring(2, 36)
 }
@@ -21,4 +28,24 @@ export function getRelativeX (element, event, sizeShift = 0) {
   const x = event.clientX + sizeShift - rect.left
 
   return (100 / element.offsetWidth) * x
+}
+
+export function getSource () {
+  const webview = isWebview(navigator.userAgent)
+
+  if (webview) {
+    return 'mobile_app'
+  }
+
+  return isMobile(navigator.userAgent) ? 'mobile' : 'desktop'
+}
+
+export function isWebview (ua) {
+  const regexp = new RegExp('(' + WEBVIEW_TRIGGERS.join('|') + ')', 'ig')
+
+  return !!ua.match(regexp)
+}
+
+export function isMobile (ua) {
+  return /Mobi|Android/i.test(ua)
 }

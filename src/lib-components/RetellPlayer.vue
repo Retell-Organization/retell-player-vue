@@ -1,6 +1,14 @@
 <template>
   <div v-if="!loading && !error" :style="cssProps" class="retell_player">
-    <audio ref="player" :src="article.audio" @timeupdate="timeupdateHandler"/>
+    <audio
+      ref="player"
+      :src="article.audio"
+      preload="none"
+      @loadedmetadata="onLoadedMetaDataHandler"
+      @timeupdate="onTimeupdateHandler"
+      @ended="onEndedHandler"
+
+    />
     <div class="retell_player__control" @click="togglePlayer()">
       <slot v-if="!isPlaying" name="pauseIcon">
         <svg width="30" height="30" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,7 +57,8 @@
 <script>
 import GateApi from '@/api/gate'
 import Api from '@/api/api'
-import { makeid, formatDuration, getRetellLink, getRelativeX } from '@/utils'
+import { makeid, formatDuration, getRetellLink, getRelativeX, getSource } from '@/utils'
+import Logger from '@/services/logger'
 
 export default {
   name: 'RetellPlayer',
@@ -70,6 +79,8 @@ export default {
   },
   data () {
     return {
+      playerTicks: 0,
+      logger: null,
       url: null,
       loading: true,
       error: false,
@@ -79,6 +90,7 @@ export default {
       currentTime: 0,
       hovered: 0,
       dragPosition: 0,
+      loadedMetaData: false,
       article: {
         title: null,
         audio: null,
@@ -115,8 +127,7 @@ export default {
   },
   created () {
     this.url = this.articleUrl ? this.articleUrl : window.location.href
-    // TODO: Detect deviceType
-    this.deviceType = 'desktop'
+    this.deviceType = getSource()
 
     this.fetchArticle()
   },
@@ -155,21 +166,35 @@ export default {
       this.$refs.player.pause()
       this.isPlaying = false
     },
-    timeupdateHandler (event) {
+    onLoadedMetaDataHandler (event) {
+      this.playerTicks = 0
+      this.loadedMetaData = true
+      this.logger = new Logger(this.article, this.deviceType, this.$refs.player.duration)
+    },
+    onTimeupdateHandler (event) {
       const progress = event.target.currentTime / event.target.duration * 100
       this.currentTime = event.target.currentTime
       this.progress = progress
 
-      if (event.target.currentTime === event.target.duration) { this.pause() }
+      this.playerTicks++
+      if (this.playerTicks % 12 === 0) {
+        this.logger.log(this.currentTime)
+      }
+    },
+    onEndedHandler (event) {
+      this.pause()
+      this.logger.log(this.$refs.player.duration)
     },
     onProgressBarHover (event) {
       this.hovered = getRelativeX(this.$refs.track, event)
     },
     onProgressBarClick (event) {
+      if (!this.loadedMetaData) return
       const progress = getRelativeX(this.$refs.track, event)
       this.seek(progress)
     },
     onPointerDrag () {
+      if (!this.loadedMetaData) return
       document.addEventListener('mousemove', this.onMouseMove)
       document.addEventListener('mouseup', this.onMouseUp)
     },
