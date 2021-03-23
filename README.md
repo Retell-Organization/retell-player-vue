@@ -16,6 +16,7 @@ Vue.use(RetellPlayer)
 ```
 
 ## Usage
+
 ```vue
 <template>
     <retell-player />
@@ -28,6 +29,16 @@ You can specify the `articleUrl` to create a player with the custom article at a
     <retell-player articleUrl="ABSOLUTE_LINK_TO_THE_ARTICLE" />
 </template>
 ```
+### SSR Example
+```vue
+<template>
+    <client-only>
+        <retell-player />
+    </client-only>
+</template>
+```
+
+
 
 
 ## Props
