@@ -1,10 +1,10 @@
 {
   "name": "@retell/retell-vue-player",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Retell Audio Player",
   "author": {
-    "name": "Bibik Dima",
-    "email": "dima@retell.cc",
+    "name": "Retell",
+    "email": "hello@retell.cc",
     "url": "https://retell.cc"
   },
   "main": "dist/retell-player-vue.ssr.js",
@@ -24,9 +24,6 @@
     "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "npm run lint:js"
-  },
-  "dependencies": {
-    "axios": "^0.21.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
