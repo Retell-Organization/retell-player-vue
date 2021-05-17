@@ -45,24 +45,24 @@ You can specify the `articleUrl` to create a player with the custom article at a
 
 ## Props
 
-| Name                   | Type             | Default              | Variants                                           |
-| ---------------------- | ---------------- | -------------------- | -------------------------------------------------- |
-| articleUrl             | String           | Current page URL     |                                                    |
-| rate                   | Number           | 1                    |                                                    |
-| widget                 | String           | minimal              | default, minimal, big, superminimal, vzglyadMobile |
-| progressMarks          | Array of Numbers | [15, 25, 50, 75, 95] |                                                    |
-| fontColor              | String           | #444444              |                                                    |
-| buttonColor            | String           | #333333              |                                                    |
-| buttonColorHover       | String           | #4d4d4d              |                                                    |
-| buttonColorClick       | String           | #1a1a1a              |                                                    |
-| playerBackground       | String           | transparent          |                                                    |
-| borderColor            | String           | transparent          |                                                    |
-| borderRadius           | Number           | 8                    |                                                    |
-| pointerColor           | String           | #000000              |                                                    |
-| pointerColorHover      | String           | #000000              |                                                    |
-| pointerColorClick      | String           | #000000              |                                                    |
-| progressBarColor       | String           | #e5e5e5              |                                                    |
-| progressBarColorActive | String           | #333333              |                                                    |
+| Name                   | Type             | Default              | Variants              |
+| ---------------------- | ---------------- | -------------------- | --------------------- |
+| articleUrl             | String           | Current page URL     |                       |
+| rate                   | Number           | 1                    |                       |
+| widget                 | String           | minimal              | minimal, superminimal |
+| progressMarks          | Array of Numbers | [15, 25, 50, 75, 95] |                       |
+| fontColor              | String           | #444444              |                       |
+| buttonColor            | String           | #333333              |                       |
+| buttonColorHover       | String           | #4d4d4d              |                       |
+| buttonColorClick       | String           | #1a1a1a              |                       |
+| playerBackground       | String           | transparent          |                       |
+| borderColor            | String           | transparent          |                       |
+| borderRadius           | Number           | 8                    |                       |
+| pointerColor           | String           | #000000              |                       |
+| pointerColorHover      | String           | #000000              |                       |
+| pointerColorClick      | String           | #000000              |                       |
+| progressBarColor       | String           | #e5e5e5              |                       |
+| progressBarColorActive | String           | #333333              |                       |
 
 ## Events
 
