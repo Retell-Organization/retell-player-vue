@@ -32,7 +32,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Install dependencies 👨🏻‍💻
-        run: npm ci
+        run: yarn
 
       - name: Run linter 👀
-        run: npm run lint
+        run: yarn lint
