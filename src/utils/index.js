@@ -45,11 +45,11 @@ export function isMobile (ua) {
 }
 
 export const WidgetTypes = [
-  'default',
   'minimal',
-  'big',
   'superminimal',
-  'vzglyadMobile'
+  'vzglyadMobile',
+  'schkulev',
+  'sports',
 ]
 
 const DeviceTypes = [

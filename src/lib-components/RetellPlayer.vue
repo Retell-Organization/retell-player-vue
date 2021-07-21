@@ -36,18 +36,27 @@ export default {
       }
     },
     articleUrl: { type: String, required: false },
-    buttonColor: { type: String, default: '#333333' },
-    buttonColorHover: { type: String, default: '#4d4d4d' },
-    buttonColorClick: { type: String, default: '#1a1a1a' },
-    playerBackground: { type: String, default: 'transparent' },
-    borderColor: { type: String, default: 'transparent' },
-    borderRadius: { type: Number, default: 8 },
-    fontColor: { type: String, default: '#444444' },
-    pointerColor: { type: String, default: '#000000' },
-    pointerColorHover: { type: String, default: '#000000' },
-    pointerColorClick: { type: String, default: '#000000' },
-    progressBarColor: { type: String, default: '#e5e5e5' },
-    progressBarColorActive: { type: String, default: '#333333' },
+    buttonColor: { type: String, default: null },
+    buttonColorHover: { type: String, default: null },
+    buttonColorClick: { type: String, default: null },
+    backgroundColor: { type: String, default: null },
+    border: { type: String, default: null },
+    borderRadius: { type: Number, default: null },
+    buttonSize: { type: Number, default: null },
+    buttonSizeClick: { type: Number, default: null },
+    buttonSizeHover: { type: Number, default: null },
+    fontColor: { type: String, default: null },
+    fontFamily: { type: String, default: null },
+    pointerColor: { type: String, default: null },
+    pointerColorClick: { type: String, default: null },
+    pointerColorHover: { type: String, default: null },
+    pointerSize: { type: Number, default: null },
+    pointerSizeClick: { type: Number, default: null },
+    pointerSizeHover: { type: Number, default: null },
+    progressBarColor: { type: String, default: null },
+    progressBarColorActive: { type: String, default: null },
+    progressBarColorHover: { type: String, default: null },
+    progressBarThickness: { type: Number, default: null },
     progressMarks: {
       type: Array,
       default: () => ([15, 25, 50, 75, 95]),
@@ -60,33 +69,65 @@ export default {
   },
   data () {
     return {
-      url: ''
+      url: '',
+      widgetParams: {
+        minimal: {
+          height: 60,
+        },
+        schkulev: {
+          height: 32,
+        },
+        sports: {
+          height: 48,
+        },
+        superminimal: {
+          height: 34,
+        },
+        vzglyadMobile: {
+          height: 42,
+        },
+      },
     }
   },
   computed: {
     options () {
+      const theme = {}
+      const themeKeys = [
+        'backgroundColor',
+        'border',
+        'borderRadius',
+        'buttonColor',
+        'buttonColorClick',
+        'buttonColorHover',
+        'buttonSize',
+        'buttonSizeClick',
+        'buttonSizeHover',
+        'fontColor',
+        'fontFamily',
+        'pointerColor',
+        'pointerColorClick',
+        'pointerColorHover',
+        'pointerSize',
+        'pointerSizeClick',
+        'pointerSizeHover',
+        'progressBarColor',
+        'progressBarColorActive',
+        'progressBarColorHover',
+        'progressBarThickness',
+      ]
+
+      themeKeys.forEach(key => this[key] && (theme[key] = this[key]))
+
       const options = {
         rate: this.rate,
         url: this.articleUrl,
         type: 'article',
         widget: this.widget,
-        theme: {
-          buttonColor: this.buttonColor,
-          buttonColorHover: this.buttonColorHover,
-          buttonColorClick: this.buttonColorClick,
-          playerBackground: this.playerBackground,
-          borderColor: this.borderColor,
-          borderRadius: this.borderRadius,
-          fontColor: this.fontColor,
-          pointerColor: this.pointerColor,
-          pointerColorHover: this.pointerColorHover,
-          pointerColorClick: this.pointerColorClick,
-          progressBarColor: this.progressBarColor,
-          progressBarColorActive: this.progressBarColorActive
-        }
+        theme,
       }
+
       return validateOptions(options)
-    }
+    },
   },
   created () {
     this.url = this.articleUrl || window.location.href
@@ -135,7 +176,7 @@ export default {
           break
 
         case 'widgetready':
-          this.openIframe()
+          this.openIframe(this.widgetParams[this.widget].height)
           this.$emit('opened', data)
 
           if (window.parent && window.parent !== window) {
