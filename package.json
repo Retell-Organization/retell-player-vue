@@ -24,11 +24,13 @@
     "build:es": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format es",
     "build:unpkg": "cross-env NODE_ENV=production rollup --config build/rollup.config.js --format iife",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
-    "lint": "yarn lint:js"
+    "lint": "yarn lint:js",
+    "commit": "git cz"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.13.12",
+    "@digitalroute/cz-conventional-changelog-for-jira": "^6.6.0",
     "@rollup/plugin-alias": "^3.1.1",
     "@rollup/plugin-babel": "^5.2.2",
     "@rollup/plugin-commonjs": "^19.0.0",
@@ -37,6 +39,7 @@
     "@vue/cli-plugin-babel": "^4.5.10",
     "@vue/cli-service": "^4.5.10",
     "babel-eslint": "^10.1.0",
+    "commitizen": "^4.2.4",
     "cross-env": "^7.0.3",
     "eslint": "^7.26.0",
     "eslint-config-standard": "^16.0.2",

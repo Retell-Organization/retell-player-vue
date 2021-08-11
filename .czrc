@@ -1,0 +1,19 @@
+{
+	"path": "./node_modules/@digitalroute/cz-conventional-changelog-for-jira",
+  "jiraOptional": true,
+  "jiraPrefix": "RET",
+  "jiraLocation": "pre-description",
+  "skipScope": false,
+  "scopes": [
+    "changelog",
+    "commitizen",
+    "deps",
+    "deps-dev",
+    "eslint",
+    "git",
+    "github",
+    "readme",
+    "scripts",
+    "yarn"
+  ]
+}
