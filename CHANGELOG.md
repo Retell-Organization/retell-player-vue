@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/retell-organization/retell-player-vue/compare/v1.3.1...v1.3.2) (2021-08-11)
+
+
+### Bug Fixes
+
+* **yarn:** RET-191 fixing run cross-env for build ([21da0a5](https://github.com/retell-organization/retell-player-vue/commit/21da0a5efa9b267602c802c128e2377a4c010070))
+
 ### 1.3.1 (2021-08-11)
 
 
