@@ -49,7 +49,7 @@ export const WidgetTypes = [
   'superminimal',
   'vzglyadMobile',
   'schkulev',
-  'sports',
+  'sports'
 ]
 
 const DeviceTypes = [

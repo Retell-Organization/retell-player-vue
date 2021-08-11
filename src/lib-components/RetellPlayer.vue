@@ -72,21 +72,21 @@ export default {
       url: '',
       widgetParams: {
         minimal: {
-          height: 60,
+          height: 60
         },
         schkulev: {
-          height: 32,
+          height: 32
         },
         sports: {
-          height: 48,
+          height: 48
         },
         superminimal: {
-          height: 34,
+          height: 34
         },
         vzglyadMobile: {
-          height: 42,
-        },
-      },
+          height: 42
+        }
+      }
     }
   },
   computed: {
@@ -113,7 +113,7 @@ export default {
         'progressBarColor',
         'progressBarColorActive',
         'progressBarColorHover',
-        'progressBarThickness',
+        'progressBarThickness'
       ]
 
       themeKeys.forEach(key => this[key] && (theme[key] = this[key]))
@@ -123,11 +123,11 @@ export default {
         url: this.articleUrl,
         type: 'article',
         widget: this.widget,
-        theme,
+        theme
       }
 
       return validateOptions(options)
-    },
+    }
   },
   created () {
     this.url = this.articleUrl || window.location.href
